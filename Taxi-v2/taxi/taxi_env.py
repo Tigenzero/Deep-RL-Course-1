@@ -4,7 +4,8 @@ import random
 import gym
 import numpy as np
 
-TAXI_NAME = "Taxi-v2"
+TAXI_NAME = "Taxi-v3"
+MODE = 'ansi'
 
 
 class Taxi:
@@ -17,7 +18,7 @@ class Taxi:
         self.exploration_params = exploration_params
 
     def render_env(self):
-        return self.env.render_env()
+        self.env.render(mode=MODE)
 
     def reset_env(self):
         return self.env.reset()

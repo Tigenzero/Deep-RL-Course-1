@@ -1,12 +1,12 @@
 class EpisodeParams(object):
-    def __init__(self):
-        self.total_episodes = 50000
-        self.total_test_episodes = 100
+    def __init__(self, total_episodes=50000, total_test_episodes=100, max_steps=99, learning_rate=0.7, gamma=0.618):
+        self.total_episodes = total_episodes
+        self.total_test_episodes = total_test_episodes
         # Perhaps too many steps
-        self.max_steps = 99
+        self.max_steps = max_steps
         # what are these?
-        self.learning_rate = 0.7
-        self.gamma = 0.618
+        self.learning_rate = learning_rate
+        self.gamma = gamma
 
 
 class ExplorationParams(object):
