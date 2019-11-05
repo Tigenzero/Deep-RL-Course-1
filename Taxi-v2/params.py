@@ -1,6 +1,6 @@
 class EpisodeParams(object):
-    def __init__(self, total_episodes=50000, total_test_episodes=100, max_steps=99, learning_rate=0.7, gamma=0.618):
-        self.total_episodes = total_episodes
+    def __init__(self, total_training_episodes=50000, total_test_episodes=100, max_steps=100, learning_rate=0.7, gamma=0.618):
+        self.total_training_episodes = total_training_episodes
         self.total_test_episodes = total_test_episodes
         # Perhaps too many steps
         self.max_steps = max_steps
