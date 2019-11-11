@@ -1,6 +1,6 @@
-import tensorflow.compat.v1 as tf
-tf.disable_v2_behavior()
+import tensorflow as tf
 import numpy as np
+import logging
 
 
 class DeepQnet(object):
@@ -26,19 +26,18 @@ class DeepQnet(object):
         """Creates the net's placeholders for later use
         :return:
         """
-        with tf.variable_creator_scope(self.name):
+        with tf.variable_scope(self.name):
+            self.inputs_ = tf.placeholder(tf.float32, [None, *self.state_size], name="inputs")
 
-            self.inputs_ = tf.placeholder(tf.float32, [None, *self.state_size], name="inputs_")
             self.actions_ = tf.placeholder(tf.float32, [None, self.action_size], name="actions_")
 
             # Target Q is R(s,a) + ymax Qhat(s', a')
             self.target_Q = tf.placeholder(tf.float32, [None], name="target")
-
             conv1 = self.create_conv_net(self.inputs_, 32, [8, 8], [4, 4], "conv1")
             conv1_out = self.create_elu(conv1, "conv1_out")
 
             conv2 = self.create_conv_net(conv1_out, 64, [4, 4], [2, 2], "conv2")
-            conv2_out = self.create_elu(conv2, name="conv2_out")
+            conv2_out = self.create_elu(conv2, "conv2_out")
 
             conv3 = self.create_conv_net(conv2_out, 64, [3, 3], [2, 2], "conv3")
             conv3_out = self.create_elu(conv3, "conv3_out")
@@ -55,8 +54,8 @@ class DeepQnet(object):
 
             self.optimizer = tf.train.AdamOptimizer(self.learning_rate).minimize(self.loss)
 
-    def create_conv_net(self, inputs, filters, kernal_size, strides, name):
-        return tf.layers.conv2d(inputs=inputs, filters=filters, kernal_size=kernal_size, strides=strides,
+    def create_conv_net(self, inputs, filters, kernel_size, strides, name):
+        return tf.layers.conv2d(inputs=inputs, filters=filters, kernel_size=kernel_size, strides=strides,
                                 padding="VALID", kernel_initializer=tf.contrib.layers.xavier_initializer_conv2d(),
                                 name=name)
 
@@ -97,17 +96,21 @@ class DeepQnet(object):
             else:
                 target = rewards_mb[i] + gamma * np.max(Qs_next_state[i])
                 target_Qs_batch.append(target)
-            targets_mb = np.array([each for each in target_Qs_batch])
+        targets_mb = np.array([each for each in target_Qs_batch])
+        np.array
+        logging.info("states_mb: {} and {}".format(str(states_mb.dtype), str(states_mb.shape)))
+        logging.info("targets_mb: {} and {}".format(str(targets_mb.dtype), str(targets_mb.shape)))
+        logging.info("actions_mb: {} and {}".format(str(actions_mb.dtype), str(actions_mb.shape)))
+        # TODO: ValueError: setting an array element with a sequence.
+        loss, _ = session.run([self.loss, self.optimizer],
+                              feed_dict={self.inputs_: states_mb,
+                                         self.target_Q: targets_mb,
+                                         self.actions_: actions_mb})
 
-            loss, _ = session.run([self.loss, self.optimizer],
-                                  feed_dict={self.inputs_: states_mb,
-                                             self.target_Q: targets_mb,
-                                             self.actions_: actions_mb})
-
-            # write TF summaries
-            summary = session.run(self.write_op,
-                                  feed_dict={self.inputs_: states_mb,
-                                             self.target_Q: targets_mb,
-                                             self.actions_: actions_mb})
-            self.writer.add_summary(summary, episode)
-            self.writer.flush()
+        # write TF summaries
+        summary = session.run(self.write_op,
+                              feed_dict={self.inputs_: states_mb,
+                                         self.target_Q: targets_mb,
+                                         self.actions_: actions_mb})
+        self.writer.add_summary(summary, episode)
+        self.writer.flush()

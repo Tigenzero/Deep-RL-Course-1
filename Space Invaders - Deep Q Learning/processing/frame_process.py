@@ -17,7 +17,7 @@ class FramePreprocessor(object):
         return rgb2gray(frame)
 
     def crop_frame(self, frame):
-        return frame[self.top_crop: frame.height - self.bottom_crop, self.left_crop: frame.width - self.right_crop]
+        return frame[self.top_crop: frame.shape[0] - self.bottom_crop, self.left_crop: frame.shape[1] - self.right_crop]
 
     def normalize_frame(self, frame):
         if self.normalize > 0:

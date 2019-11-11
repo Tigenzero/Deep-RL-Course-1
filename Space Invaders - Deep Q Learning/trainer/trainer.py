@@ -13,7 +13,7 @@ class Trainer(object):
                 step = 0
                 episode_rewards = []
                 environment.reset_environment()
-                state, stacked_frames = environment.init_stack_frames(environment.get_state())
+                state, stacked_frames = environment.env_init_stack_frames(environment.get_state())
 
                 while step < training_params.max_steps:
                     step += 1
@@ -28,7 +28,7 @@ class Trainer(object):
 
                     if done:
                         next_state = environment.create_zero_state(state)
-                        next_state, stacked_frames = environment.stack_frames(stacked_frames, next_state)
+                        next_state, stacked_frames = environment.env_stack_frames(stacked_frames, next_state)
                         # end the episode by maxing the steps
                         step = training_params.max_steps
                         total_reward = np.sum(episode_rewards)
@@ -39,11 +39,10 @@ class Trainer(object):
                                      "Training Loss {:.4f}".format(player.deep_q_net.loss))
 
                         player.add_reward_to_list(episode, total_reward, training=True)
-                        # Odd, previous memory adds did not add 'done' to the list. Keep an eye out if issues arise
                         environment.memory.add((state, action, reward, next_state, done))
 
                     else:
-                        next_state, stacked_frames = environment.stack_frames(stacked_frames, next_state)
+                        next_state, stacked_frames = environment.env_stack_frames(stacked_frames, next_state)
                         # same here
                         environment.memory.add((state, action, reward, next_state, done))
                         state = next_state
@@ -63,7 +62,7 @@ class Trainer(object):
             for episode in range(episodes):
                 total_rewards = 0
                 environment.reset_environment()
-                state, stacked_frames = environment.init_stack_frames(environment.get_state())
+                state, stacked_frames = environment.env_init_stack_frames(environment.get_state())
                 logging.info("******************************************************")
                 logging.info("EPISODE: ", episode)
 
@@ -79,5 +78,5 @@ class Trainer(object):
                         player.add_reward_to_list(episode, total_rewards)
                         break
 
-                    next_state, stacked_frames = environment.stack_frames(stacked_frames, next_state)
+                    next_state, stacked_frames = environment.env_stack_frames(stacked_frames, next_state)
                     state = next_state

@@ -31,7 +31,7 @@ if __name__ == "__main__":
     player.deep_q_net.initialize()
     environment.initialize_memory(player)
     # To Launch Tensorboard: tensorboard --logidr=/tensorboard/dqn/1
-    player.deep_q_net.setup_tensorboard_writer("/tensorboard/dqn/1")
+    player.deep_q_net.setup_tensorboard_writer("./tensorboard/dqn/1")
 
     player.init_saver()
 
