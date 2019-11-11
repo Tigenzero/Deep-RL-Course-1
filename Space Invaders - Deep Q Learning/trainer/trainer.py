@@ -33,10 +33,10 @@ class Trainer(object):
                         step = training_params.max_steps
                         total_reward = np.sum(episode_rewards)
 
-                        logging.info("Episode: {}".format(episode),
-                                     "Total reward: {}".format(total_reward),
-                                     "Explore P {:.4f}".format(explore_probability),
-                                     "Training Loss {:.4f}".format(player.deep_q_net.loss))
+                        logging.info("Episode: {}".format(episode))
+                        logging.info("Total reward: {}".format(total_reward))
+                        logging.info("Explore P {:.4f}".format(explore_probability))
+                        logging.info("Training Loss {:.4f}".format(player.deep_q_net.loss))
 
                         player.add_reward_to_list(episode, total_reward, training=True)
                         environment.memory.add((state, action, reward, next_state, done))

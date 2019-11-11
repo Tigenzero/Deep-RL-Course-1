@@ -59,19 +59,18 @@ class Environment(object):
         return np.zeros(state.shape)
 
     def initialize_memory(self, player):
-        state = self.get_state()
         self.memory = Memory(self.processing_params.memory_size)
-        stacked_state, stacked_frames = self.env_init_stack_frames(state)
+        stacked_state, stacked_frames = self.env_init_stack_frames(self.get_state())
         for _ in range(self.processing_params.pretrain_length):
             action = player.get_random_action()
             next_state, reward, done, _ = self.take_action(action)
             # self.render_environment()
             next_state, stacked_frames = self.env_stack_frames(stacked_frames, next_state)
             if done:
-                next_state = self.create_zero_state(state)
-                self.memory.add((state, action, reward, next_state, done))
+                next_state = self.create_zero_state(stacked_state)
+                self.memory.add((stacked_state, action, reward, next_state, done))
                 self.reset_environment()
-                state, stacked_frames = self.env_init_stack_frames(self.get_state())
+                stacked_state, stacked_frames = self.env_init_stack_frames(self.get_state())
             else:
-                self.memory.add((state, action, reward, next_state, done))
-                state = next_state
+                self.memory.add((stacked_state, action, reward, next_state, done))
+                stacked_state = next_state

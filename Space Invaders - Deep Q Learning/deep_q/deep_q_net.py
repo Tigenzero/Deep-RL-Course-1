@@ -3,7 +3,7 @@ import numpy as np
 import logging
 
 
-class DeepQnet(object):
+class DeepQNet(object):
     def __init__(self, state_size, action_size, learning_rate, name="DeepQNet"):
         self.state_size = state_size
         self.action_size = action_size
@@ -97,11 +97,6 @@ class DeepQnet(object):
                 target = rewards_mb[i] + gamma * np.max(Qs_next_state[i])
                 target_Qs_batch.append(target)
         targets_mb = np.array([each for each in target_Qs_batch])
-        np.array
-        logging.info("states_mb: {} and {}".format(str(states_mb.dtype), str(states_mb.shape)))
-        logging.info("targets_mb: {} and {}".format(str(targets_mb.dtype), str(targets_mb.shape)))
-        logging.info("actions_mb: {} and {}".format(str(actions_mb.dtype), str(actions_mb.shape)))
-        # TODO: ValueError: setting an array element with a sequence.
         loss, _ = session.run([self.loss, self.optimizer],
                               feed_dict={self.inputs_: states_mb,
                                          self.target_Q: targets_mb,

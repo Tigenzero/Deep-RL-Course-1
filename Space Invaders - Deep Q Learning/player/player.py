@@ -2,7 +2,7 @@ import numpy as np
 import tensorflow.compat.v1 as tf
 import random
 import logging
-from deep_q.deep_q_net import DeepQnet
+from deep_q.deep_q_net import DeepQNet
 tf.disable_v2_behavior()
 
 MODEL_PATH = "./models/model.ckpt"
@@ -16,7 +16,7 @@ class Player(object):
         self.decay_rate = decay_rate
         self.decay_step = 0
         self.possible_actions = possible_actions
-        self.deep_q_net = DeepQnet(state_size=state_size, action_size=action_size, learning_rate=learning_rate)
+        self.deep_q_net = DeepQNet(state_size=state_size, action_size=action_size, learning_rate=learning_rate)
         self.saver = None
         self.training_rewards_list = []
         self.test_rewards_list = []
