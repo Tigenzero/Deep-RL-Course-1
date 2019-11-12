@@ -84,7 +84,7 @@ class DeepQNet(object):
         dones_mb = np.array([each[4] for each in batch])
 
         target_Qs_batch = []
-
+        # MemoryError: Unable to allocate array with shape (64, 110, 84, 4) and data type float32
         Qs_next_state = session.run(self.output, feed_dict={self.inputs_: next_states_mb})
 
         # set Q_target = r if the episode ends at s+1, otherwise set Q_target = r + gamma*maxQ(s', a')

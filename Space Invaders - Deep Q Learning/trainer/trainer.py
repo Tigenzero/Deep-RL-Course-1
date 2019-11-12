@@ -6,7 +6,7 @@ tf.disable_v2_behavior()
 
 class Trainer(object):
     def train_model(self, environment, player, training_params):
-        with tf.Session() as sess:
+        with tf.Session(config=tf.ConfigProto(log_device_placement=True)) as sess:
             sess.run(tf.global_variables_initializer())
             player.reset_decay_step()
             for episode in range(training_params.total_episodes):
@@ -35,8 +35,10 @@ class Trainer(object):
 
                         logging.info("Episode: {}".format(episode))
                         logging.info("Total reward: {}".format(total_reward))
-                        logging.info("Explore P {:.4f}".format(explore_probability))
-                        logging.info("Training Loss {:.4f}".format(player.deep_q_net.loss))
+                        # These values could be either None or I need to use {!s:20s} or something similar.
+                        # Considering the
+                        # logging.info("Explore P: {:.4f}".format(explore_probability))
+                        # logging.info("Training Loss: {:.4f}".format(player.deep_q_net.loss))
 
                         player.add_reward_to_list(episode, total_reward, training=True)
                         environment.memory.add((state, action, reward, next_state, done))
