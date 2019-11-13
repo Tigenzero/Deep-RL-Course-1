@@ -1,10 +1,12 @@
 from skimage.color import rgb2gray
 from skimage import transform
+import numpy as np
+from sklearn import preprocessing
 import logging
 
 
 class FramePreprocessor(object):
-    def __init__(self, top_crop=0, bottom_crop=0, left_crop=0, right_crop=0, normalize=1, resize_width=0, resize_height=0):
+    def __init__(self, top_crop, bottom_crop, left_crop, right_crop, normalize, resize_width, resize_height):
         self.top_crop = top_crop
         self.bottom_crop = bottom_crop
         self.left_crop = left_crop
@@ -13,17 +15,22 @@ class FramePreprocessor(object):
         self.resize_width = resize_width
         self.resize_height = resize_height
 
-    def convert_greyscale(self, frame):
+    def convert_grayscale(self, frame):
         return rgb2gray(frame)
 
     def crop_frame(self, frame):
-        return frame[self.top_crop: frame.shape[0] - self.bottom_crop, self.left_crop: frame.shape[1] - self.right_crop]
+        # return frame[self.top_crop: frame.shape[0] - self.bottom_crop, self.left_crop: frame.shape[1] - self.right_crop]
+        return frame[self.top_crop: -self.bottom_crop, self.left_crop: -self.right_crop]
 
-    def normalize_frame(self, frame):
-        if self.normalize > 0:
-            return frame/255.0
-        else:
-            return frame
+    # def normalize_frame(self, frame):
+    #     # if self.normalize > 0:
+    #     #     return frame/self.normalize
+    #     # else:
+    #     #     return frame
+    #     x = np.random.rand(1000)*10
+    #     norm1 = x / np.linalg.norm(x)
+    #     norm2 = preprocessing.normalize(x[:,np.newaxis], axis=0).ravel()
+
 
     def resize_frame(self, frame):
         if self.resize_height > 0 and self.resize_width > 0:
@@ -32,10 +39,11 @@ class FramePreprocessor(object):
             logging.warning("unable to resize, resize height or width not set")
 
     def preprocess_frame(self, frame):
-        gray_frame = self.convert_greyscale(frame)
+        gray_frame = self.convert_grayscale(frame)
         cropped_frame = self.crop_frame(gray_frame)
-        normalized_frame = self.normalize_frame(cropped_frame)
-        return self.resize_frame(normalized_frame)
+        # normalized_frame = self.normalize_frame(cropped_frame)
+        # return self.resize_frame(normalized_frame)
+        return self.resize_frame(cropped_frame)
 
     @classmethod
     def preprocess_frame_class(cls, env_object, frame):

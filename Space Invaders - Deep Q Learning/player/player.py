@@ -58,7 +58,6 @@ class Player(object):
         else:
             self.test_rewards_list.append({episode, total_reward})
 
-
     def init_saver(self):
         self.saver = tf.train.Saver()
 

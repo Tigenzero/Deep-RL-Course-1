@@ -6,8 +6,10 @@ tf.disable_v2_behavior()
 
 class Trainer(object):
     def train_model(self, environment, player, training_params):
-        with tf.Session(config=tf.ConfigProto(log_device_placement=True)) as sess:
+        with tf.Session() as sess:
             sess.run(tf.global_variables_initializer())
+            if training_params.use_existing_model:
+                player.load_model(sess)
             player.reset_decay_step()
             for episode in range(training_params.total_episodes):
                 step = 0
@@ -66,7 +68,7 @@ class Trainer(object):
                 environment.reset_environment()
                 state, stacked_frames = environment.env_init_stack_frames(environment.get_state())
                 logging.info("******************************************************")
-                logging.info("EPISODE: ", episode)
+                logging.info("EPISODE: {}".format(episode))
 
                 while True:
                     action = player.get_exploit_action(state, sess)

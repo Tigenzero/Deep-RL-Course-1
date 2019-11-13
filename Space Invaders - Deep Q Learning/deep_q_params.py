@@ -23,7 +23,7 @@ class TrainingParams(object):
         self.learning_rate = 0.00025
 
         # Training
-        self.total_episodes = 50
+        self.total_episodes = 30
         self.max_steps = 50000
         self.batch_size = BATCH_SIZE
 
@@ -37,6 +37,7 @@ class TrainingParams(object):
 
         # To see trained agent, set to False
         self.training = True
+        self.use_existing_model = True
 
         # To see the environment, set to True
         self.episode_render = False
