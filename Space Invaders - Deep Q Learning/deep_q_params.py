@@ -1,5 +1,6 @@
 BATCH_SIZE = 64
 
+
 class ProcessingParams(object):
     def __init__(self):
         self.top_crop = 8
