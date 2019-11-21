@@ -18,9 +18,11 @@ if __name__ == "__main__":
     logging.config.fileConfig('logging.conf', defaults={'logfile': logfile})
     logging.debug("Starting main")
     warnings.filterwarnings('ignore')
+    training_params = TrainingParams()
+    if training_params.gpu_required and not tf.test.is_gpu_available() and not tf.test.is_built_with_cuda():
+        raise Exception("GPU is required and Tensorflow has no GPU available.")
     trainer = Trainer()
     environment = Environment()
-    training_params = TrainingParams()
     player = Player.create_class_with_param_object(training_params=training_params,
                                                    possible_actions=environment.get_possible_actions(),
                                                    action_size=environment.get_action_size())

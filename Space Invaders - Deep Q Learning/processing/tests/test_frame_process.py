@@ -1,10 +1,14 @@
 import nose
+import numpy as np
+import os
 import retro
 import imageio
 from processing.frame_process import FramePreprocessor
 
 
 RETRO_GAME = 'SpaceInvaders-Atari2600'
+CUR_FILE_PATH = os.path.dirname(os.path.abspath(__file__))
+IMAGE_PATH = os.path.join(CUR_FILE_PATH, "images")
 
 
 def get_retro_frame():
@@ -27,7 +31,7 @@ def test_frameprocessor_convert_grayscale():
     expected_shape = (frame.shape[0], frame.shape[1])
     print(grayscale_frame.shape)
     print(expected_shape)
-    imageio.imsave("./images/test_grayscale_frame.png", grayscale_frame)
+    save_image(grayscale_frame, "test_grayscale_frame.png")
     assert expected_shape == grayscale_frame.shape
 
 
@@ -40,12 +44,17 @@ def test_frameprocessor_crop_frame():
     assert cropped_frame.shape == (190, 144, 3)
 
 
-# def test_frameprocessor_normalize_frame():
-#     frame = get_retro_frame()
-#     frame_processor = FramePreprocessor(None, None, None, None, 255.0, None, None)
-#     frame = frame_processor.convert_grayscale(frame)
-#     normalized_frame = frame_processor.normalize_frame(frame)
-#     imageio.imsave("./images/test_normalized_frame.png", normalized_frame)
+def test_frameprocessor_normalize_frame():
+    frame = get_retro_frame()
+    frame_processor = FramePreprocessor(8, 12, 4, 12, 255.0, None, None)
+    frame = frame_processor.convert_grayscale(frame)
+    frame = frame_processor.crop_frame(frame)
+    normalized_frame = frame_processor.normalize_frame(frame)
+    frame_min = np.amin(normalized_frame)
+    frame_max = np.amax(normalized_frame)
+    assert frame_min == 0
+    assert frame_max == 1
+    save_image(normalized_frame, "test_normalized_frame.png")
 
 
 def test_frameprocessor_resize_frame():
@@ -62,5 +71,19 @@ def test_frameprocessor_preprocess_frame():
     frame = get_retro_frame()
     frame_processor = FramePreprocessor(8, 12, 4, 12, 255.0, 110, 84)
     processed_frame = frame_processor.preprocess_frame(frame)
-    imageio.imsave("./images/test_processed_frame.png", processed_frame)
+    save_image(processed_frame, "test_processed_frame.png")
+    frame_min = np.amin(processed_frame)
+    frame_max = np.amax(processed_frame)
+    print("min: {}, max: {}".format(frame_min, frame_max))
+    assert frame_min == 0
+    assert frame_max == 1
     assert processed_frame.shape == (110, 84)
+
+
+
+def save_image(frame, filename):
+    if not os.path.exists(IMAGE_PATH):
+        os.mkdir(IMAGE_PATH)
+    frame_path = os.path.join(IMAGE_PATH, filename)
+    print(frame_path)
+    imageio.imsave(frame_path, frame)

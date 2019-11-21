@@ -6,7 +6,7 @@ tf.disable_v2_behavior()
 
 class Trainer(object):
     def train_model(self, environment, player, training_params):
-        with tf.Session() as sess:
+        with tf.Session(config=tf.ConfigProto(log_device_placement=True)) as sess:
             sess.run(tf.global_variables_initializer())
             if training_params.use_existing_model:
                 player.load_model(sess)

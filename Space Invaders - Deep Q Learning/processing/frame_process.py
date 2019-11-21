@@ -1,7 +1,5 @@
 from skimage.color import rgb2gray
 from skimage import transform
-import numpy as np
-from sklearn import preprocessing
 import logging
 
 
@@ -19,18 +17,15 @@ class FramePreprocessor(object):
         return rgb2gray(frame)
 
     def crop_frame(self, frame):
-        # return frame[self.top_crop: frame.shape[0] - self.bottom_crop, self.left_crop: frame.shape[1] - self.right_crop]
         return frame[self.top_crop: -self.bottom_crop, self.left_crop: -self.right_crop]
 
-    # def normalize_frame(self, frame):
-    #     # if self.normalize > 0:
-    #     #     return frame/self.normalize
-    #     # else:
-    #     #     return frame
-    #     x = np.random.rand(1000)*10
-    #     norm1 = x / np.linalg.norm(x)
-    #     norm2 = preprocessing.normalize(x[:,np.newaxis], axis=0).ravel()
-
+    def normalize_frame(self, frame):
+        if self.normalize > 0:
+            normalized_frame = frame/self.normalize
+            normalized_frame = normalized_frame > 0.0001
+            return normalized_frame.astype(int)
+        else:
+            return frame
 
     def resize_frame(self, frame):
         if self.resize_height > 0 and self.resize_width > 0:
@@ -41,9 +36,8 @@ class FramePreprocessor(object):
     def preprocess_frame(self, frame):
         gray_frame = self.convert_grayscale(frame)
         cropped_frame = self.crop_frame(gray_frame)
-        # normalized_frame = self.normalize_frame(cropped_frame)
-        # return self.resize_frame(normalized_frame)
-        return self.resize_frame(cropped_frame)
+        resized_frame = self.resize_frame(cropped_frame)
+        return self.normalize_frame(resized_frame)
 
     @classmethod
     def preprocess_frame_class(cls, env_object, frame):

@@ -42,3 +42,6 @@ class TrainingParams(object):
 
         # To see the environment, set to True
         self.episode_render = False
+
+        # Fail process if GPU isn't being used
+        self.gpu_required = True
