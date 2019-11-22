@@ -47,7 +47,8 @@ class DeepQNet(object):
             self.output = self.output_model(fc, self.action_size)
 
             # Q value is our predicted Q value
-            q_value = tf.reduce_sum(tf.multiply(self.output, self.actions_))
+            # adjustment: axis added upon bug report: https://github.com/simoninithomas/Deep_reinforcement_learning_Course/issues/68
+            q_value = tf.reduce_sum(tf.multiply(self.output, self.actions_), axis=1)
 
             # Loss is the difference between our predicted Q values and the Q target
             self.loss = tf.reduce_mean(tf.square(self.target_Q - q_value))
@@ -109,3 +110,4 @@ class DeepQNet(object):
                                          self.actions_: actions_mb})
         self.writer.add_summary(summary, episode)
         self.writer.flush()
+        return loss

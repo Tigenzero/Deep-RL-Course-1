@@ -80,7 +80,6 @@ def test_frameprocessor_preprocess_frame():
     assert processed_frame.shape == (110, 84)
 
 
-
 def save_image(frame, filename):
     if not os.path.exists(IMAGE_PATH):
         os.mkdir(IMAGE_PATH)

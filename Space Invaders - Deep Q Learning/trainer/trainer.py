@@ -37,10 +37,8 @@ class Trainer(object):
 
                         logging.info("Episode: {}".format(episode))
                         logging.info("Total reward: {}".format(total_reward))
-                        # These values could be either None or I need to use {!s:20s} or something similar.
-                        # Considering the
-                        # logging.info("Explore P: {:.4f}".format(explore_probability))
-                        # logging.info("Training Loss: {:.4f}".format(player.deep_q_net.loss))
+                        logging.info("Explore P: {:.4f}".format(explore_probability))
+                        logging.info("Training Loss: {:.4f}".format(loss))
 
                         player.add_reward_to_list(episode, total_reward, training=True)
                         environment.memory.add((state, action, reward, next_state, done))
@@ -51,7 +49,7 @@ class Trainer(object):
                         environment.memory.add((state, action, reward, next_state, done))
                         state = next_state
 
-                    player.deep_q_net.learn(batch=environment.memory.sample(training_params.batch_size),
+                    loss = player.deep_q_net.learn(batch=environment.memory.sample(training_params.batch_size),
                                             session=sess,
                                             gamma=training_params.gamma,
                                             episode=episode)
@@ -64,6 +62,7 @@ class Trainer(object):
         with tf.Session() as sess:
             player.load_model(sess)
             for episode in range(episodes):
+                # frame_num = 1
                 total_rewards = 0
                 environment.reset_environment()
                 state, stacked_frames = environment.env_init_stack_frames(environment.get_state())
@@ -83,4 +82,9 @@ class Trainer(object):
                         break
 
                     next_state, stacked_frames = environment.env_stack_frames(stacked_frames, next_state)
+                    #  For Testing that frames look like they are supposed to
+                    # if frame_num % 10 == 0:
+                    #     frame_filename = "E{}F{}.png".format(episode, frame_num)
+                    #     environment.save_frame(stacked_frames[-1], frame_filename)
+                    # frame_num += 1
                     state = next_state

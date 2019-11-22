@@ -32,7 +32,7 @@ if __name__ == "__main__":
     tf.reset_default_graph
     player.deep_q_net.initialize()
     environment.initialize_memory(player)
-    # To Launch Tensorboard: tensorboard --logidr=/tensorboard/dqn/1
+    # To Launch Tensorboard: tensorboard --logdir=/tensorboard/dqn/1
     player.deep_q_net.setup_tensorboard_writer("./tensorboard/dqn/1")
 
     player.init_saver()
