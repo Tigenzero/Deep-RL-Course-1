@@ -1,6 +1,8 @@
+import os
 import retro
 import numpy as np
 import tensorflow.compat.v1 as tf
+import imageio
 from experience_replay.memory import Memory
 from processing.frame_process import FramePreprocessor
 from processing.frame_stack import FrameStacker
@@ -8,6 +10,8 @@ from deep_q_params import ProcessingParams
 tf.disable_v2_behavior()
 
 RETRO_GAME = 'SpaceInvaders-Atari2600'
+CUR_FILE_PATH = os.path.dirname(os.path.abspath(__file__))
+IMAGE_PATH = os.path.join(CUR_FILE_PATH, "images")
 
 
 class Environment(object):
@@ -74,3 +78,10 @@ class Environment(object):
             else:
                 self.memory.add((stacked_state, action, reward, next_state, done))
                 stacked_state = next_state
+
+    def save_frame(self, frame, filename):
+        if not os.path.exists(IMAGE_PATH):
+            os.mkdir(IMAGE_PATH)
+        frame_path = os.path.join(IMAGE_PATH, filename)
+        print(frame_path)
+        imageio.imsave(frame_path, frame)

@@ -24,7 +24,7 @@ class TrainingParams(object):
         self.learning_rate = 0.00025
 
         # Training
-        self.total_episodes = 30
+        self.total_episodes = 60
         self.max_steps = 50000
         self.batch_size = BATCH_SIZE
 
