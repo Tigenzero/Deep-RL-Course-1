@@ -85,6 +85,6 @@ class Trainer(object):
                     #  For Testing that frames look like they are supposed to
                     # if frame_num % 10 == 0:
                     #     frame_filename = "E{}F{}.png".format(episode, frame_num)
-                    #     environment.save_frame(stacked_frames[-1], frame_filename)
+                    #     cartpole_environment.save_frame(stacked_frames[-1], frame_filename)
                     # frame_num += 1
                     state = next_state

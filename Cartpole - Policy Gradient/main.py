@@ -3,7 +3,7 @@ import logging
 import logging.config
 import warnings
 from cartpole_params import NeuralNetParams, TrainingParams
-from environment.environment import Environment
+from cartpole_environment.environment import Environment
 from neural_net.neural_net import NeuralNet
 from cartpole_trainer.trainer import Trainer
 

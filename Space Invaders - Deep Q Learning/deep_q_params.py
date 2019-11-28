@@ -40,7 +40,7 @@ class TrainingParams(object):
         self.training = True
         self.use_existing_model = True
 
-        # To see the environment, set to True
+        # To see the cartpole_environment, set to True
         self.episode_render = False
 
         # Fail process if GPU isn't being used

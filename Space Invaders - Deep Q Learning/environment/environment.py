@@ -48,7 +48,7 @@ class Environment(object):
 
     def env_init_stack_frames(self, state):
         """
-        Process state and stack frames in a new environment
+        Process state and stack frames in a new cartpole_environment
         Nothing is needed since the state will be pulled from the class state
         :return: stacked state, stacked frames
         """

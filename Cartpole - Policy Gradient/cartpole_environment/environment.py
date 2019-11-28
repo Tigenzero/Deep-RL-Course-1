@@ -19,11 +19,14 @@ class Environment(object):
     def init_action_space(self):
         self.action_size = self.env.action_space.n
 
-    def reset_env(self):
+    def reset_environment(self):
         return self.env.reset()
 
-    def render_env(self):
+    def render_environment(self):
         self.env.render()
 
     def take_action(self, action):
         return self.env.step(action)
+
+    def get_action_size(self):
+        return self.action_size
