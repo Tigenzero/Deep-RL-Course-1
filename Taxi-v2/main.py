@@ -1,6 +1,6 @@
 import os
 import logging.config
-from params import ExplorationParams, EpisodeParams
+from taxi_params import ExplorationParams, EpisodeParams
 from taxi.taxi_env import Taxi
 
 LOAD_Q_TABLE = False

@@ -4,7 +4,7 @@ import warnings
 import tensorflow.compat.v1 as tf
 from player.player import Player
 from deep_q_params import TrainingParams
-from trainer.trainer import Trainer
+from SI_trainer.trainer import Trainer
 from environment.environment import Environment
 tf.disable_v2_behavior()
 
