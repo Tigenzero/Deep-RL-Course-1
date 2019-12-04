@@ -17,7 +17,7 @@ if __name__ == "__main__":
     warnings.filterwarnings('ignore')
     neural_net_params = NeuralNetParams()
     training_params = TrainingParams()
-    environment = Environment()
+    environment = Environment(training_params.render_environment)
 
     neural_net = NeuralNet()
     neural_net.initialize(neural_net_params.state_size,
@@ -26,5 +26,6 @@ if __name__ == "__main__":
     neural_net.setup_tensorboard(training_params.tensorboard_folder)
     trainer = Trainer(training_params.model_path)
     if training_params.train:
-        trainer.train_model(environment, neural_net, training_params.max_episodes, training_params.gamma)
-
+        trainer.train_model(environment, neural_net, training_params.max_training_episodes, training_params.gamma)
+    if training_params.test:
+        trainer.test_model(environment, neural_net, training_params.max_testing_episodes)
